@@ -1,0 +1,29 @@
+.app__toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+  background: var(--mat-sys-surface-container);
+}
+
+.app__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+  color: inherit;
+  font: var(--mat-sys-title-medium);
+  text-decoration: none;
+}
+
+.app__content {
+  display: block;
+  max-width: 76rem;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 4rem;
+}
+
+@media (max-width: 40rem) {
+  .app__content {
+    padding: 1.5rem 1rem 3rem;
+  }
+}

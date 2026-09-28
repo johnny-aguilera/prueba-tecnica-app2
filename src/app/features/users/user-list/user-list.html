@@ -1,0 +1,152 @@
+<section class="users">
+  <header class="users__header">
+    <div>
+      <h1 class="users__title">Users</h1>
+      <p class="users__summary">
+        @if (loading()) {
+        Loading…
+        } @else if (error()) {
+        Data unavailable, please try again
+        } @else if (hasUsers()) {
+        {{ activeUsers().length }} active of {{ users().length }}
+        {{ users().length === 1 ? 'user' : 'users' }}
+        } @else {
+        No users found
+        }
+      </p>
+    </div>
+
+    <div class="users__actions">
+      <button matButton (click)="loadUsers()" [disabled]="loading()">
+        <mat-icon>refresh</mat-icon>
+        Refresh
+      </button>
+      <a matButton="filled" routerLink="/users/new">
+        <mat-icon>person_add</mat-icon>
+        New user
+      </a>
+    </div>
+  </header>
+
+  @if (loading()) {
+  <div class="users__state" role="status">
+    <mat-spinner diameter="48" />
+    <p>Loading users…</p>
+  </div>
+  } @else if (error()) {
+  <div class="users__state users__state--error" role="alert">
+    <mat-icon class="users__state-icon">error_outline</mat-icon>
+    <p>{{ error() }}</p>
+    <button matButton="filled" (click)="loadUsers()">Try again</button>
+  </div>
+  } @else if (!hasUsers()) {
+  <div class="users__state">
+    <mat-icon class="users__state-icon">group_off</mat-icon>
+    <p>No users found.</p>
+    <a matButton="filled" routerLink="/users/new">Create the first user</a>
+  </div>
+  } @else {
+  <div class="users__filters">
+    <mat-form-field appearance="outline" class="users__search">
+      <mat-label>Search</mat-label>
+      <input matInput type="search" autocomplete="off" placeholder="Username, name or email" [value]="searchTerm()"
+        (input)="onSearch($event)" />
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+
+    <mat-slide-toggle [checked]="activeOnly()" (change)="activeOnly.set($event.checked)">
+      Active only
+    </mat-slide-toggle>
+  </div>
+
+  @if (visibleUsers().length === 0) {
+  <div class="users__state">
+    <mat-icon class="users__state-icon">filter_alt_off</mat-icon>
+    <p>No users match the current filters.</p>
+    <button matButton (click)="clearFilters()">Clear filters</button>
+  </div>
+  } @else {
+  <div class="users__table-wrapper">
+    <table mat-table [dataSource]="visibleUsers()" class="users__table">
+      <ng-container matColumnDef="username">
+        <th mat-header-cell *matHeaderCellDef>Username</th>
+        <td mat-cell *matCellDef="let user">{{ user.username }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="fullName">
+        <th mat-header-cell *matHeaderCellDef>Name</th>
+        <td mat-cell *matCellDef="let user">{{ user.name }} {{ user.surnames }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="email">
+        <th mat-header-cell *matHeaderCellDef>Email</th>
+        <td mat-cell *matCellDef="let user">{{ user.email }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="age">
+        <th mat-header-cell *matHeaderCellDef class="users__cell--numeric">Age</th>
+        <td mat-cell *matCellDef="let user" class="users__cell--numeric">{{ user.age }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef>Status</th>
+        <td mat-cell *matCellDef="let user">
+          <span class="users__status" [class.users__status--active]="user.active"
+            [class.users__status--inactive]="!user.active">
+            {{ user.active ? 'Active' : 'Inactive' }}
+          </span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="lastLogging">
+        <th mat-header-cell *matHeaderCellDef>Last login</th>
+        <td mat-cell *matCellDef="let user">
+          @if (user.lastLogging) {
+          <span [matTooltip]="user.lastLogging | date: 'medium'">
+            {{ user.lastLogging | date: 'mediumDate' }}
+          </span>
+          } @else {
+          <span class="users__muted">Never</span>
+          }
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="creationDate">
+        <th mat-header-cell *matHeaderCellDef>Created</th>
+        <td mat-cell *matCellDef="let user">{{ user.creationDate | date: 'mediumDate' }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef class="users__cell--actions">Actions</th>
+        <td mat-cell *matCellDef="let user" class="users__cell--actions">
+          <a matIconButton [routerLink]="['/users', user.id, 'edit']" [matTooltip]="'Edit ' + user.username"
+            [attr.aria-label]="'Edit ' + user.username">
+            <mat-icon>edit</mat-icon>
+          </a>
+
+          @if (deletingUserId() === user.id) {
+          <mat-spinner diameter="24" class="users__row-spinner" />
+          } @else {
+          <button matIconButton class="users__delete" [disabled]="deletingUserId() !== null"
+            [matTooltip]="'Delete ' + user.username" [attr.aria-label]="'Delete ' + user.username"
+            (click)="confirmDelete(user)">
+            <mat-icon>delete</mat-icon>
+          </button>
+          }
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="columns"></tr>
+      <tr mat-row *matRowDef="let row; columns: columns"></tr>
+    </table>
+  </div>
+
+  <p class="users__footnote">
+    Showing {{ visibleUsers().length }} of {{ users().length }}
+    @if (filtersApplied()) {
+    <button matButton (click)="clearFilters()">Clear filters</button>
+    }
+  </p>
+  }
+  }
+</section>

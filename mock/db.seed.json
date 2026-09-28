@@ -1,0 +1,26 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "username": "john.doe",
+      "name": "John",
+      "surnames": "Doe33",
+      "email": "john.doe@example.com",
+      "age": 32,
+      "active": true,
+      "lastLogging": "2026-09-20T10:30:00Z",
+      "creationDate": "2026-01-10T09:00:00Z"
+    },
+    {
+      "id": 2,
+      "username": "jane.doe",
+      "name": "Jane",
+      "surnames": "Doe33",
+      "email": "jane.doe@example.com",
+      "age": 28,
+      "active": true,
+      "lastLogging": "2026-09-25T15:45:00Z",
+      "creationDate": "2026-02-15T11:20:00Z"
+    }
+  ]
+}

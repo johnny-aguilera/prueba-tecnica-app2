@@ -1,0 +1,134 @@
+.users {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.users__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.users__title {
+  margin: 0;
+  font: var(--mat-sys-headline-small);
+}
+
+.users__summary {
+  margin: 0.25rem 0 0;
+  color: var(--mat-sys-on-surface-variant);
+  font: var(--mat-sys-body-medium);
+}
+
+.users__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.users__filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.users__search {
+  min-width: 18rem;
+}
+
+.users__state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 3rem 1.5rem;
+  border: 1px dashed var(--mat-sys-outline-variant);
+  border-radius: var(--mat-sys-corner-large);
+  color: var(--mat-sys-on-surface-variant);
+  text-align: center;
+
+  p {
+    margin: 0;
+  }
+}
+
+.users__state--error {
+  border-style: solid;
+  border-color: var(--mat-sys-error);
+  color: var(--mat-sys-error);
+}
+
+.users__state-icon {
+  --mat-icon-color: currentColor;
+
+  width: 2.5rem;
+  height: 2.5rem;
+  font-size: 2.5rem;
+}
+
+.users__table-wrapper {
+  overflow-x: auto;
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: var(--mat-sys-corner-medium);
+}
+
+.users__table {
+  width: 100%;
+  min-width: 56rem;
+}
+
+.users__cell--numeric {
+  text-align: right;
+}
+
+.users__cell--actions {
+  width: 6.5rem;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.users__status {
+  display: inline-block;
+  padding: 0.125rem 0.625rem;
+  border-radius: 999px;
+  font: var(--mat-sys-label-small);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.users__status--active {
+  background: var(--mat-sys-secondary-container);
+  color: var(--mat-sys-on-secondary-container);
+}
+
+.users__status--inactive {
+  background: var(--mat-sys-surface-variant);
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.users__muted {
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.users__delete {
+  --mat-icon-button-icon-color: var(--mat-sys-error);
+}
+
+.users__row-spinner {
+  display: inline-block;
+  margin: 0 0.75rem;
+  vertical-align: middle;
+}
+
+.users__footnote {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0;
+  color: var(--mat-sys-on-surface-variant);
+  font: var(--mat-sys-body-small);
+}

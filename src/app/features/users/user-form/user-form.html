@@ -1,0 +1,134 @@
+<section class="user-form">
+  <header class="user-form__header">
+    <div>
+      <h1 class="user-form__title">{{ pageTitle() }}</h1>
+      @if (currentUser(); as user) {
+        <p class="user-form__subtitle">
+          #{{ user.id }} · created {{ user.creationDate | date: 'mediumDate' }} · last login
+          {{ user.lastLogging ? (user.lastLogging | date: 'medium') : 'never' }}
+        </p>
+      } @else if (!isEditMode()) {
+        <p class="user-form__subtitle">All fields are required except the password rules noted below.</p>
+      }
+    </div>
+
+    <a matButton routerLink="/users">
+      <mat-icon>arrow_back</mat-icon>
+      Back to users
+    </a>
+  </header>
+
+  @if (loadingUser()) {
+    <div class="user-form__state" role="status">
+      <mat-spinner diameter="48" />
+      <p>Loading user…</p>
+    </div>
+  } @else if (loadError()) {
+    <div class="user-form__state user-form__state--error" role="alert">
+      <mat-icon class="user-form__state-icon">error_outline</mat-icon>
+      <p>{{ loadError() }}</p>
+      <div class="user-form__state-actions">
+        @if (canRetry()) {
+          <button matButton="filled" (click)="retryLoad()">Try again</button>
+        }
+        <a matButton routerLink="/users">Back to users</a>
+      </div>
+    </div>
+  } @else if (formReady()) {
+    <mat-card appearance="outlined">
+      <mat-card-content>
+        <form class="user-form__grid" [formGroup]="form" (ngSubmit)="save()" novalidate>
+          <mat-form-field appearance="outline">
+            <mat-label>Username</mat-label>
+            <input matInput formControlName="username" autocomplete="username" maxlength="50" />
+            @if (form.controls.username.hasError('required')) {
+              <mat-error>Username is required.</mat-error>
+            } @else if (form.controls.username.hasError('minlength')) {
+              <mat-error>Use at least 3 characters.</mat-error>
+            } @else if (form.controls.username.hasError('maxlength')) {
+              <mat-error>Use at most 50 characters.</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Email</mat-label>
+            <input matInput formControlName="email" type="email" autocomplete="email" />
+            @if (form.controls.email.hasError('required')) {
+              <mat-error>Email is required.</mat-error>
+            } @else if (form.controls.email.hasError('email')) {
+              <mat-error>Enter a valid email address.</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Name</mat-label>
+            <input matInput formControlName="name" autocomplete="given-name" maxlength="100" />
+            @if (form.controls.name.hasError('required')) {
+              <mat-error>Name is required.</mat-error>
+            } @else if (form.controls.name.hasError('minlength')) {
+              <mat-error>Use at least 2 characters.</mat-error>
+            } @else if (form.controls.name.hasError('maxlength')) {
+              <mat-error>Use at most 100 characters.</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Surnames</mat-label>
+            <input matInput formControlName="surnames" autocomplete="family-name" maxlength="150" />
+            @if (form.controls.surnames.hasError('required')) {
+              <mat-error>Surnames are required.</mat-error>
+            } @else if (form.controls.surnames.hasError('minlength')) {
+              <mat-error>Use at least 2 characters.</mat-error>
+            } @else if (form.controls.surnames.hasError('maxlength')) {
+              <mat-error>Use at most 150 characters.</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Age</mat-label>
+            <input matInput formControlName="age" type="number" min="0" max="120" step="1" />
+            @if (form.controls.age.hasError('required')) {
+              <mat-error>Age is required.</mat-error>
+            } @else if (form.controls.age.hasError('min')) {
+              <mat-error>Age cannot be negative.</mat-error>
+            } @else if (form.controls.age.hasError('max')) {
+              <mat-error>Age cannot be greater than 120.</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Password</mat-label>
+            <input matInput formControlName="password" type="password" autocomplete="new-password" />
+            <mat-hint>{{ passwordHint() }}</mat-hint>
+            @if (form.controls.password.hasError('required')) {
+              <mat-error>Password is required.</mat-error>
+            } @else if (form.controls.password.hasError('minlength')) {
+              <mat-error>Use at least {{ passwordMinLength }} characters.</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-checkbox class="user-form__checkbox" formControlName="active">
+            Active
+          </mat-checkbox>
+
+          @if (submitAttempted() && form.invalid) {
+            <p class="user-form__summary-error" role="alert">
+              <mat-icon>error_outline</mat-icon>
+              Review the highlighted fields before saving.
+            </p>
+          }
+
+          <div class="user-form__actions">
+            <a matButton routerLink="/users" [class.user-form__disabled]="saving()">Cancel</a>
+            <button matButton="filled" type="submit" [disabled]="saving()">
+              @if (saving()) {
+                <mat-spinner diameter="18" />
+              }
+              {{ submitLabel() }}
+            </button>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  }
+</section>
